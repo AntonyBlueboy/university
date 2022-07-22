@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS `employee` (
-                                          `id`    INTEGER  PRIMARY KEY AUTO_INCREMENT,
+                                          `id`    INTEGER PRIMARY KEY AUTO_INCREMENT,
                                           `name`  VARCHAR(50) NOT NULL,
                                           `salary` FLOAT NOT NULL,
-                                          `degree` ENUM ('assistant', 'associate professor', 'professor')
+                                          `degree` ENUM ('ASSISTANT', 'ASSOCIATE_PROFESSOR', 'PROFESSOR')
 );
 
 CREATE TABLE IF NOT EXISTS `department` (
                                             `id`    INTEGER  PRIMARY KEY AUTO_INCREMENT,
-                                            `name`  VARCHAR(50) NOT NULL,
+                                            `name`  VARCHAR(50) NOT NULL UNIQUE ,
                                             `head_id` INTEGER NOT NULL,
                                             FOREIGN KEY (`head_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
