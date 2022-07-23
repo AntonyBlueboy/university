@@ -5,6 +5,7 @@ import com.martynenko.anton.university.department.Department;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Entity representing university employee .
@@ -98,6 +99,22 @@ public class Employee {
    */
   public Double getSalary() {
     return salary;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Employee employee = (Employee) o;
+    return id.equals(employee.id) &&
+        name.equals(employee.name) &&
+        salary.equals(employee.salary) &&
+        degree == employee.degree;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, salary, degree);
   }
 
   @Override
