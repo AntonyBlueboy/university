@@ -1,5 +1,7 @@
 package com.martynenko.anton.university.ui;
 
+import com.martynenko.anton.university.department.DepartmentService;
+import com.martynenko.anton.university.employee.EmployeeService;
 import com.martynenko.anton.university.exception.NoSuchDepartmentException;
 import com.martynenko.anton.university.department.Department;
 import com.martynenko.anton.university.employee.Employee;
@@ -30,12 +32,30 @@ public class AnswerService {
   private final LocalizationHelper localizationHelper;
 
   /**
+   * Bean serving {@link Department} entities   .
+   */
+
+  private final DepartmentService departmentService;
+
+  /**
+   * Bean serving {@link Employee} entities   .
+   */
+
+  private final EmployeeService employeeService;
+
+  /**
    * Autowiring constructor.
    * @param localizationHelper {@link LocalizationHelper} bean
+   * @param departmentService {@link DepartmentService} bean
+   * @param employeeService {@link EmployeeService} bean
    */
   @Autowired
-  public AnswerService(final LocalizationHelper localizationHelper) {
+  public AnswerService(final LocalizationHelper localizationHelper,
+                       final DepartmentService departmentService,
+                       final EmployeeService employeeService) {
     this.localizationHelper = localizationHelper;
+    this.departmentService = departmentService;
+    this.employeeService = employeeService;
   }
 
   /**
@@ -85,22 +105,25 @@ public class AnswerService {
 
   /**
    * Get an answer to the 'who is the department's head' question .
-   * @param  department {@link Department} entity
+   * @param  departmentName {@link Department}'s name
    * @return message
    */
   @NotNull
-  public String getDepartmentsHeadNameAnswer(@NotNull final Department department) {
+  public String getDepartmentsHeadNameAnswer(@NotNull final String departmentName) {
+    Department department = departmentService.getDepartmentByName(departmentName);
 
     return String.format(localizationHelper.getMessage(ANSWER_DEPARTMENT_HEAD_OF), department.getName(), department.getHead().getName());
   }
 
   /**
    * Get an answer to the 'department's statistic' question .
-   * @param  department {@link Department} entity
+   * @param  departmentName {@link Department}'s name
    * @return message
    */
   @NotNull
-  public String getDepartmentEmployeeStatisticsAnswer(@NotNull final Department department) {
+  public String getDepartmentEmployeeStatisticsAnswer(@NotNull final String departmentName) {
+
+    Department department = departmentService.getDepartmentByName(departmentName);
 
     int assistCount = department.getEmployees().stream()
         .filter(employee -> employee.getDegree().equals(Employee.Degree.ASSISTANT))
@@ -119,11 +142,13 @@ public class AnswerService {
 
   /**
    * Get an answer to the 'department's average salary' question .
-   * @param  department {@link Department} entity
+   * @param  departmentName {@link Department}'s name
    * @return message
    */
   @NotNull
-  public String getAvgSalaryStatisticsAnswer(@NotNull final Department department) {
+  public String getAvgSalaryStatisticsAnswer(@NotNull final String departmentName) {
+
+    Department department = departmentService.getDepartmentByName(departmentName);
 
     DoubleSummaryStatistics statistics = department.getEmployees()
         .stream()
@@ -136,24 +161,28 @@ public class AnswerService {
 
   /**
    * Get an answer to the 'department's employee count' question .
-   * @param  department {@link Department} entity
+   * @param  departmentName {@link Department}'s name
    * @return message
    */
 
   @NotNull
-  public String getEmployeeCountAnswer(@NotNull final Department department) {
+  public String getEmployeeCountAnswer(@NotNull final String departmentName) {
+
+    Department department = departmentService.getDepartmentByName(departmentName);
 
     return department.getEmployees().size() + "";
   }
 
   /**
    * Get an answer to the 'global employee search' question .
-   * @param  employees list of {@link Employee}
+   * @param  subName sub name to search
    * @return message
    */
 
   @NotNull
-  public String getGlobalEmployeeSearchAnswer(@NotNull final List<Employee> employees) {
+  public String getGlobalEmployeeSearchAnswer(@NotNull final String subName) {
+
+    List<Employee> employees = employeeService.getEmployees(subName);
 
     if (employees.isEmpty()) {
       return localizationHelper.getMessage(ANSWER_EMPLOYEE_NOTHING_FOUND);

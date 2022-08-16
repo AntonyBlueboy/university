@@ -1,15 +1,10 @@
 package com.martynenko.anton.university.ui;
 
-import com.martynenko.anton.university.department.Department;
-import com.martynenko.anton.university.department.DepartmentService;
-import com.martynenko.anton.university.employee.Employee;
-import com.martynenko.anton.university.employee.EmployeeService;
 import com.martynenko.anton.university.i18n.LocalizationHelper;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Scanner;
 
 import static com.martynenko.anton.university.i18n.MessageCode.*;
@@ -30,18 +25,6 @@ public class QuestionDistributor {
   private final LocalizationHelper localizationHelper;
 
   /**
-   * Bean serving {@link Department} entities   .
-   */
-
-  private final DepartmentService departmentService;
-
-  /**
-   * Bean serving {@link Employee} entities   .
-   */
-
-  private final EmployeeService employeeService;
-
-  /**
    * Service to convert data to String responses   .
    */
 
@@ -50,17 +33,12 @@ public class QuestionDistributor {
   /**
    * Autowiring constructor.
    * @param localizationHelper {@link LocalizationHelper} bean
-   * @param departmentService {@link DepartmentService} bean
-   * @param employeeService {@link EmployeeService} bean
    * @param answerService {@link AnswerService} bean
    */
   @Autowired
-  public QuestionDistributor(final LocalizationHelper localizationHelper, final DepartmentService departmentService,
-                             final EmployeeService employeeService, final AnswerService answerService) {
+  public QuestionDistributor(final LocalizationHelper localizationHelper,  final AnswerService answerService) {
 
     this.localizationHelper = localizationHelper;
-    this.departmentService = departmentService;
-    this.employeeService = employeeService;
     this.answerService = answerService;
   }
 
@@ -107,17 +85,16 @@ public class QuestionDistributor {
 
     //question number 1
     if (extraction != null) {
-      Department department = departmentService.getDepartmentByName(extraction);
-      return answerService.getDepartmentsHeadNameAnswer(department);
+
+      return answerService.getDepartmentsHeadNameAnswer(extraction);
     }
 
     extraction = localizationHelper.extract(question, QUESTION_DEPARTMENT_STATISTICS);
 
     //question number 2
     if (extraction != null) {
-      Department department = departmentService.getDepartmentByName(extraction);
 
-      return answerService.getDepartmentEmployeeStatisticsAnswer(department);
+      return answerService.getDepartmentEmployeeStatisticsAnswer(extraction);
 
     }
 
@@ -125,9 +102,8 @@ public class QuestionDistributor {
 
     //question number 3
     if (extraction != null) {
-      Department department = departmentService.getDepartmentByName(extraction);
 
-      return answerService.getAvgSalaryStatisticsAnswer(department);
+      return answerService.getAvgSalaryStatisticsAnswer(extraction);
     }
 
     extraction = localizationHelper.extract(question, QUESTION_DEPARTMENT_COUNT);
@@ -135,9 +111,7 @@ public class QuestionDistributor {
     //question number 4
     if (extraction != null) {
 
-      Department department = departmentService.getDepartmentByName(extraction);
-
-      return answerService.getEmployeeCountAnswer(department);
+      return answerService.getEmployeeCountAnswer(extraction);
     }
 
     extraction = localizationHelper.extract(question, QUESTION_EMPLOYEE_SEARCH);
@@ -145,9 +119,7 @@ public class QuestionDistributor {
     //question number 5
     if (extraction != null) {
 
-      List<Employee> employees = employeeService.getEmployees(extraction);
-
-      return answerService.getGlobalEmployeeSearchAnswer(employees);
+      return answerService.getGlobalEmployeeSearchAnswer(extraction);
     }
 
     //incorrect input

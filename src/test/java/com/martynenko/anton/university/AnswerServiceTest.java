@@ -1,10 +1,13 @@
 package com.martynenko.anton.university;
 
+import com.martynenko.anton.university.department.DepartmentService;
+import com.martynenko.anton.university.employee.EmployeeService;
 import com.martynenko.anton.university.exception.NoSuchDepartmentException;
 import com.martynenko.anton.university.department.Department;
 import com.martynenko.anton.university.employee.Employee;
 import com.martynenko.anton.university.i18n.LocalizationHelper;
 import com.martynenko.anton.university.ui.AnswerService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,10 +35,27 @@ class AnswerServiceTest {
   @Mock
   private LocalizationHelper localizationHelper;
 
+  @Mock
+  private DepartmentService departmentService;
+
+  @Mock
+  private EmployeeService employeeService;
+
   @InjectMocks
   private AnswerService answerService;
 
+  private static final String departmentName = "departmentName";
+  private final Department department = Mockito.mock(Department.class);
+
+  private static final String extraction = "extraction";
   private static String answer = "answer";
+
+  @BeforeEach
+  void prepare() {
+    when(department.getName()).thenReturn(departmentName);
+    when(departmentService.getDepartmentByName(extraction)).thenReturn(department);
+  }
+
 
   @Test
   void getGreetingAnswer() {
@@ -80,18 +100,15 @@ class AnswerServiceTest {
   void getDepartmentsHeadNameAnswer() {
     String patternWithTwoVariables = "%s %s";
     String employeeName = "employeeName";
-    String departmentName = "departmentName";
     String answerWithNames = String.format(patternWithTwoVariables, departmentName, employeeName);
 
     Employee employee = Mockito.mock(Employee.class);
     when(employee.getName()).thenReturn(employeeName);
-    Department department = Mockito.mock(Department.class);
-    when(department.getName()).thenReturn(departmentName);
     when(department.getHead()).thenReturn(employee);
 
     when(localizationHelper.getMessage(ANSWER_DEPARTMENT_HEAD_OF)).thenReturn(patternWithTwoVariables);
 
-    assertThat(answerService.getDepartmentsHeadNameAnswer(department)).isEqualTo(answerWithNames);
+    assertThat(answerService.getDepartmentsHeadNameAnswer(extraction)).isEqualTo(answerWithNames);
   }
 
   @Test
@@ -123,19 +140,18 @@ class AnswerServiceTest {
         employees.add(employee);
       }
     }
-    Department department = Mockito.mock(Department.class);
     when(department.getEmployees()).thenReturn(employees);
 
     when(localizationHelper.getMessage(ANSWER_DEPARTMENT_STATISTICS)).thenReturn(patternWithThreeDoubles);
 
-    assertThat(answerService.getDepartmentEmployeeStatisticsAnswer(department)).isEqualTo(answerWithThreeDoubles);
+    assertThat(answerService.getDepartmentEmployeeStatisticsAnswer(extraction)).isEqualTo(answerWithThreeDoubles);
   }
 
   @Test
   void getAvgSalaryStatisticsAnswer() {
 
     String patternWithTowVariables = "%s %.2f";
-    String departmentName = "departmentName";
+
     Double avgSalary = 1000D;
     String answerWithTwoVariables = String.format(patternWithTowVariables, departmentName, avgSalary);
 
@@ -145,13 +161,11 @@ class AnswerServiceTest {
     Employee employee2 = Mockito.mock(Employee.class);
     when(employee2.getSalary()).thenReturn(1500D);
 
-    Department department = Mockito.mock(Department.class);
-    when(department.getName()).thenReturn(departmentName);
     when(department.getEmployees()).thenReturn(Arrays.asList(employee1, employee2));
 
     when(localizationHelper.getMessage(ANSWER_DEPARTMENT_SALARY)).thenReturn(patternWithTowVariables);
 
-    assertThat(answerService.getAvgSalaryStatisticsAnswer(department)).isEqualTo(answerWithTwoVariables);
+    assertThat(answerService.getAvgSalaryStatisticsAnswer(extraction)).isEqualTo(answerWithTwoVariables);
   }
 
   @Test
@@ -161,15 +175,15 @@ class AnswerServiceTest {
         .limit(employeeCount)
         .collect(Collectors.toList());
 
-    Department department = Mockito.mock(Department.class);
     when(department.getEmployees()).thenReturn(employees);
 
-    assertThat(answerService.getEmployeeCountAnswer(department)).isEqualTo(Integer.toString(employeeCount));
+    assertThat(answerService.getEmployeeCountAnswer(extraction)).isEqualTo(Integer.toString(employeeCount));
   }
 
   @Test
   void getGlobalEmployeeSearchAnswer() {
     String nothingFoundMessage = "nothingFoundMessage";
+    String subStringWithNoAssociation = "subStringWithNoAssociation";
 
     when(localizationHelper.getMessage(ANSWER_EMPLOYEE_NOTHING_FOUND)).thenReturn(nothingFoundMessage);
 
@@ -183,8 +197,11 @@ class AnswerServiceTest {
     when(employee2.getName()).thenReturn(name2);
     List<Employee> employees = Arrays.asList(employee1, employee2);
 
-    assertThat(answerService.getGlobalEmployeeSearchAnswer(Collections.EMPTY_LIST)).isEqualTo(nothingFoundMessage);
-    assertThat(answerService.getGlobalEmployeeSearchAnswer(employees)).isEqualTo(returnString);
+    when(employeeService.getEmployees(extraction)).thenReturn(employees);
+    when(employeeService.getEmployees(subStringWithNoAssociation)).thenReturn(new ArrayList<>());
+
+    assertThat(answerService.getGlobalEmployeeSearchAnswer(subStringWithNoAssociation)).isEqualTo(nothingFoundMessage);
+    assertThat(answerService.getGlobalEmployeeSearchAnswer(extraction)).isEqualTo(returnString);
   }
 
   @Test

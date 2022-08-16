@@ -35,12 +35,6 @@ class QuestionDistributorTest {
   private QuestionDistributor questionDistributor;
 
   @Mock
-  private DepartmentService departmentService;
-
-  @Mock
-  private EmployeeService employeeService;
-
-  @Mock
   private LocalizationHelper localizationHelper;
 
   @Mock
@@ -49,7 +43,6 @@ class QuestionDistributorTest {
   private static final String question = "question";
   private static final String extraction = "extraction";
   private static final String answer = "answer";
-  private static final Department department = Mockito.mock(Department.class);
 
   @Test
   void contextLoads(){
@@ -58,57 +51,48 @@ class QuestionDistributorTest {
 
   @BeforeEach
   void prepareMocks(){
-    Mockito.clearInvocations(departmentService, employeeService, localizationHelper, answerService);
+    Mockito.clearInvocations(localizationHelper, answerService);
   }
 
   @Test
   void shouldReturnDepartmentsHeadNameAnswer() {
-    when(departmentService.getDepartmentByName(extraction)).thenReturn(department);
 
-    when(answerService.getDepartmentsHeadNameAnswer(department)).thenReturn(answer);
     when(localizationHelper.extract(question, QUESTION_DEPARTMENT_HEAD_OF)).thenReturn(extraction);
+    when(answerService.getDepartmentsHeadNameAnswer(extraction)).thenReturn(answer);
 
     assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
   }
 
   @Test
   void shouldReturnDepartmentEmployeeStatisticsAnswer(){
-    when(departmentService.getDepartmentByName(extraction)).thenReturn(department);
-
-    when(answerService.getDepartmentEmployeeStatisticsAnswer(department)).thenReturn(answer);
     when(localizationHelper.extract(question, QUESTION_DEPARTMENT_STATISTICS)).thenReturn(extraction);
+    when(answerService.getDepartmentEmployeeStatisticsAnswer(extraction)).thenReturn(answer);
     assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
   }
 
   @Test
   void shouldReturnAvgSalaryStatisticsAnswer(){
-    when(departmentService.getDepartmentByName(extraction)).thenReturn(department);
 
-    when(answerService.getAvgSalaryStatisticsAnswer(department)).thenReturn(answer);
     when(localizationHelper.extract(question, QUESTION_DEPARTMENT_SALARY)).thenReturn(extraction);
+    when(answerService.getAvgSalaryStatisticsAnswer(extraction)).thenReturn(answer);
 
     assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
   }
 
   @Test
   void shouldReturnEmployeeCountAnswer(){
-    when(departmentService.getDepartmentByName(extraction)).thenReturn(department);
 
-    when(answerService.getEmployeeCountAnswer(department)).thenReturn(answer);
     when(localizationHelper.extract(question, QUESTION_DEPARTMENT_COUNT)).thenReturn(extraction);
+    when(answerService.getEmployeeCountAnswer(extraction)).thenReturn(answer);
 
     assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
   }
 
   @Test
   void shouldReturnGlobalEmployeeSearchAnswer(){
-    List<Employee> employees = new ArrayList<>();
-
     when(localizationHelper.extract(question, QUESTION_EMPLOYEE_SEARCH)).thenReturn(extraction);
 
-    when(employeeService.getEmployees(extraction)).thenReturn(employees);
-
-    when(answerService.getGlobalEmployeeSearchAnswer(employees)).thenReturn(answer);
+    when(answerService.getGlobalEmployeeSearchAnswer(extraction)).thenReturn(answer);
 
     assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
   }
