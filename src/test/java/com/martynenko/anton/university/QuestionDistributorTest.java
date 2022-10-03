@@ -1,9 +1,5 @@
 package com.martynenko.anton.university;
 
-import com.martynenko.anton.university.department.Department;
-import com.martynenko.anton.university.department.DepartmentService;
-import com.martynenko.anton.university.employee.Employee;
-import com.martynenko.anton.university.employee.EmployeeService;
 import com.martynenko.anton.university.i18n.LocalizationHelper;
 import com.martynenko.anton.university.ui.AnswerService;
 import com.martynenko.anton.university.ui.QuestionDistributor;
@@ -18,13 +14,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import static com.martynenko.anton.university.i18n.MessageCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -57,44 +51,44 @@ class QuestionDistributorTest {
   @Test
   void shouldReturnDepartmentsHeadNameAnswer() {
 
-    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_HEAD_OF)).thenReturn(extraction);
+    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_HEAD_OF)).thenReturn(Optional.of(extraction));
     when(answerService.getDepartmentsHeadNameAnswer(extraction)).thenReturn(answer);
 
-    assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
+    assertEquals(answer, ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question));
   }
 
   @Test
   void shouldReturnDepartmentEmployeeStatisticsAnswer(){
-    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_STATISTICS)).thenReturn(extraction);
+    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_STATISTICS)).thenReturn(Optional.of(extraction));
     when(answerService.getDepartmentEmployeeStatisticsAnswer(extraction)).thenReturn(answer);
-    assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
+    assertEquals(answer, ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question));
   }
 
   @Test
   void shouldReturnAvgSalaryStatisticsAnswer(){
 
-    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_SALARY)).thenReturn(extraction);
+    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_SALARY)).thenReturn(Optional.of(extraction));
     when(answerService.getAvgSalaryStatisticsAnswer(extraction)).thenReturn(answer);
 
-    assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
+    assertEquals(answer, ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question));
   }
 
   @Test
   void shouldReturnEmployeeCountAnswer(){
 
-    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_COUNT)).thenReturn(extraction);
+    when(localizationHelper.extract(question, QUESTION_DEPARTMENT_COUNT)).thenReturn(Optional.of(extraction));
     when(answerService.getEmployeeCountAnswer(extraction)).thenReturn(answer);
 
-    assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
+    assertEquals(answer, ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question));
   }
 
   @Test
   void shouldReturnGlobalEmployeeSearchAnswer(){
-    when(localizationHelper.extract(question, QUESTION_EMPLOYEE_SEARCH)).thenReturn(extraction);
+    when(localizationHelper.extract(question, QUESTION_EMPLOYEE_SEARCH)).thenReturn(Optional.of(extraction));
 
     when(answerService.getGlobalEmployeeSearchAnswer(extraction)).thenReturn(answer);
 
-    assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
+    assertEquals(answer, ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question));
   }
 
   @Test
@@ -102,6 +96,6 @@ class QuestionDistributorTest {
 
     when(answerService.getIncorrectInputAnswer()).thenReturn(answer);
 
-    assertEquals(ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question), answer);
+    assertEquals(answer, ReflectionTestUtils.invokeMethod(questionDistributor, "getAnswer", question));
   }
 }

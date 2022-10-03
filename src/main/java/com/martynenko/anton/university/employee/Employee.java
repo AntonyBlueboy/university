@@ -1,6 +1,10 @@
 package com.martynenko.anton.university.employee;
 
 import com.martynenko.anton.university.department.Department;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +17,9 @@ import java.util.Objects;
  * @since 1.0
  */
 
+@ToString
+@EqualsAndHashCode(exclude = "departments")
+@Getter
 @Entity
 public class Employee {
 
@@ -42,6 +49,7 @@ public class Employee {
   /**
    * Simple numeric positive id.
    */
+  @Getter(AccessLevel.NONE)
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -73,58 +81,4 @@ public class Employee {
       inverseJoinColumns = { @JoinColumn(name = "department_id") }
   )
   private List<Department> departments = new ArrayList<>();
-
-  /**
-   * Getter for property 'name'.
-   *
-   * @return Value for property 'name'.
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * Getter for property 'degree'.
-   *
-   * @return Value for property 'degree'.
-   */
-  public Degree getDegree() {
-    return degree;
-  }
-
-  /**
-   * Getter for property 'salary'.
-   *
-   * @return Value for property 'salary'.
-   */
-  public Double getSalary() {
-    return salary;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Employee employee = (Employee) o;
-    return id.equals(employee.id) &&
-        name.equals(employee.name) &&
-        salary.equals(employee.salary) &&
-        degree == employee.degree;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, salary, degree);
-  }
-
-  @Override
-  public String toString() {
-    return "Employee{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", salary=" + salary +
-        ", degree=" + degree +
-        ", departments size=" + departments.size() +
-        '}';
-  }
 }

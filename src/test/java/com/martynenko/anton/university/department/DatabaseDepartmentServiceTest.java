@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.ConfigDataApplicationContextInitial
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -38,8 +40,8 @@ class DatabaseDepartmentServiceTest {
 
     String noSuchDepartment = "Dummy department";
 
-    when(departmentRepository.findByNameIgnoreCase(departmentName)).thenReturn(department);
-    when(departmentRepository.findByNameIgnoreCase(noSuchDepartment)).thenReturn(null);
+    when(departmentRepository.findByNameIgnoreCase(departmentName)).thenReturn(Optional.of(department));
+    when(departmentRepository.findByNameIgnoreCase(noSuchDepartment)).thenReturn(Optional.empty());
 
     assertThat(databaseDepartmentService.getDepartmentByName(departmentName)).isEqualTo(department);
 

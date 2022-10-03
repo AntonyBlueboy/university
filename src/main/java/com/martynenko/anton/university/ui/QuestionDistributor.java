@@ -1,10 +1,12 @@
 package com.martynenko.anton.university.ui;
 
 import com.martynenko.anton.university.i18n.LocalizationHelper;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 import static com.martynenko.anton.university.i18n.MessageCode.*;
@@ -15,6 +17,7 @@ import static com.martynenko.anton.university.i18n.MessageCode.*;
  * @author Martynenko Anton
  * @since 1.1
  */
+@RequiredArgsConstructor
 @Service
 public class QuestionDistributor {
 
@@ -30,17 +33,6 @@ public class QuestionDistributor {
 
   private final AnswerService answerService;
 
-  /**
-   * Autowiring constructor.
-   * @param localizationHelper {@link LocalizationHelper} bean
-   * @param answerService {@link AnswerService} bean
-   */
-  @Autowired
-  public QuestionDistributor(final LocalizationHelper localizationHelper,  final AnswerService answerService) {
-
-    this.localizationHelper = localizationHelper;
-    this.answerService = answerService;
-  }
 
   /**
    * Opens and closes console user interaction .
@@ -81,51 +73,48 @@ public class QuestionDistributor {
   @NotNull
   private String getAnswer(@NotNull final String question) {
 
-    String extraction = localizationHelper.extract(question, QUESTION_DEPARTMENT_HEAD_OF);
+    Optional<String> extraction = localizationHelper.extract(question, QUESTION_DEPARTMENT_HEAD_OF);
 
     //question number 1
-    if (extraction != null) {
+    if (extraction.isPresent()) {
 
-      return answerService.getDepartmentsHeadNameAnswer(extraction);
+      return answerService.getDepartmentsHeadNameAnswer(extraction.get());
     }
 
     extraction = localizationHelper.extract(question, QUESTION_DEPARTMENT_STATISTICS);
 
     //question number 2
-    if (extraction != null) {
+    if (extraction.isPresent()) {
 
-      return answerService.getDepartmentEmployeeStatisticsAnswer(extraction);
+      return answerService.getDepartmentEmployeeStatisticsAnswer(extraction.get());
 
     }
 
     extraction = localizationHelper.extract(question, QUESTION_DEPARTMENT_SALARY);
 
     //question number 3
-    if (extraction != null) {
+    if (extraction.isPresent()) {
 
-      return answerService.getAvgSalaryStatisticsAnswer(extraction);
+      return answerService.getAvgSalaryStatisticsAnswer(extraction.get());
     }
 
     extraction = localizationHelper.extract(question, QUESTION_DEPARTMENT_COUNT);
 
     //question number 4
-    if (extraction != null) {
+    if (extraction.isPresent()) {
 
-      return answerService.getEmployeeCountAnswer(extraction);
+      return answerService.getEmployeeCountAnswer(extraction.get());
     }
 
     extraction = localizationHelper.extract(question, QUESTION_EMPLOYEE_SEARCH);
 
     //question number 5
-    if (extraction != null) {
+    if (extraction.isPresent()) { //can be replaced with orElseGet, but let's keep style
 
-      return answerService.getGlobalEmployeeSearchAnswer(extraction);
+      return answerService.getGlobalEmployeeSearchAnswer(extraction.get());
     }
 
     //incorrect input
     return answerService.getIncorrectInputAnswer();
   }
-
-
-
 }

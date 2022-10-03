@@ -1,6 +1,7 @@
 package com.martynenko.anton.university.department;
 
 import com.martynenko.anton.university.exception.NoSuchDepartmentException;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @author Martynenko Anton
  * @since 1.0
  */
-
+@RequiredArgsConstructor
 @Service
 @Primary
 public class DatabaseDepartmentService implements DepartmentService {
@@ -24,16 +25,6 @@ public class DatabaseDepartmentService implements DepartmentService {
   private final DepartmentRepository departmentRepository;
 
   /**
-   * Autowiring constructor.
-   * @param departmentRepository {@link DepartmentRepository} bean
-   */
-
-  @Autowired
-  public DatabaseDepartmentService(@NotNull final DepartmentRepository departmentRepository) {
-    this.departmentRepository = departmentRepository;
-  }
-
-  /**
    * Get single department by it's name.
    * @param departmentName name of department to get
    * @return {@link Department} entity
@@ -42,10 +33,6 @@ public class DatabaseDepartmentService implements DepartmentService {
   @Override
   @NotNull
   public Department getDepartmentByName(@NotNull final String departmentName) throws NoSuchDepartmentException {
-    Department department = departmentRepository.findByNameIgnoreCase(departmentName);
-    if (department == null) {
-      throw new NoSuchDepartmentException();
-    }
-    return department;
+    return departmentRepository.findByNameIgnoreCase(departmentName).orElseThrow(NoSuchDepartmentException::new);
   }
 }

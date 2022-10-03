@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * {@link Employee} repository CRUD contract.
@@ -20,7 +21,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
    * @return {@link Employee} list or empty list
    */
   @NotNull List<Employee> findAllByNameContainingIgnoreCase(@NotNull String subName);
-
-  Employee findByName(String name);
-  @Transactional void deleteByName(String name);
 }

@@ -1,5 +1,6 @@
 package com.martynenko.anton.university.employee;
 
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author Martynenko Anton
  * @since 1.1
  */
-
+@RequiredArgsConstructor
 @Service
 @Primary
 public class DatabaseEmployeeService implements EmployeeService {
@@ -23,16 +24,6 @@ public class DatabaseEmployeeService implements EmployeeService {
    */
 
   private final EmployeeRepository employeeRepository;
-
-  /**
-   * Autowiring constructor.
-   * @param employeeRepository {@link EmployeeRepository} bean
-   */
-
-  @Autowired
-  public DatabaseEmployeeService(EmployeeRepository employeeRepository) {
-    this.employeeRepository = employeeRepository;
-  }
 
   /**
    * Find all employees with subname .

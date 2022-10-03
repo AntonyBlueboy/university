@@ -6,6 +6,7 @@ import com.martynenko.anton.university.exception.NoSuchDepartmentException;
 import com.martynenko.anton.university.department.Department;
 import com.martynenko.anton.university.employee.Employee;
 import com.martynenko.anton.university.i18n.LocalizationHelper;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import static com.martynenko.anton.university.i18n.MessageCode.*;
  * @author Martynenko Anton
  * @since 1.1
  */
+@RequiredArgsConstructor
 @Service
 public class AnswerService {
 
@@ -42,21 +44,6 @@ public class AnswerService {
    */
 
   private final EmployeeService employeeService;
-
-  /**
-   * Autowiring constructor.
-   * @param localizationHelper {@link LocalizationHelper} bean
-   * @param departmentService {@link DepartmentService} bean
-   * @param employeeService {@link EmployeeService} bean
-   */
-  @Autowired
-  public AnswerService(final LocalizationHelper localizationHelper,
-                       final DepartmentService departmentService,
-                       final EmployeeService employeeService) {
-    this.localizationHelper = localizationHelper;
-    this.departmentService = departmentService;
-    this.employeeService = employeeService;
-  }
 
   /**
    * Get the greetings message.

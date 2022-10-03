@@ -1,6 +1,7 @@
 package com.martynenko.anton.university;
 
 import com.martynenko.anton.university.ui.QuestionDistributor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0
  */
 
+@RequiredArgsConstructor
 @SpringBootApplication
 public class UniversityApplication implements CommandLineRunner {
 
@@ -21,16 +23,6 @@ public class UniversityApplication implements CommandLineRunner {
    */
 
   private final QuestionDistributor questionDistributor;
-
-  /**
-   * Autowiring constructor.
-   * @param questionDistributor {@link QuestionDistributor} bean
-   */
-
-  @Autowired
-  public UniversityApplication(final QuestionDistributor questionDistributor) {
-    this.questionDistributor = questionDistributor;
-  }
 
   /**
    * Start application.

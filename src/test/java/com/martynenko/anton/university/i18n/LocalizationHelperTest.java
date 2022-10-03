@@ -10,6 +10,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Locale;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +37,7 @@ class LocalizationHelperTest {
     String someCode = messageCode.getCode();
     String someString = "Some string";
 
-    when(messageSource.getMessage(someCode, null, null)).thenReturn(someString);
+    when(messageSource.getMessage(someCode, null, Locale.ENGLISH)).thenReturn(someString);
 
     assertThat(localizationHelper.getMessage(messageCode)).isEqualTo(someString);
   }
@@ -49,10 +52,10 @@ class LocalizationHelperTest {
     String patternString = "^Some string with value ([a-zA-Z ]+) here$";
     String code = messageCode.getCode();
 
-    when(messageSource.getMessage(code, null, null)).thenReturn(patternString);
+    when(messageSource.getMessage(code, null, Locale.ENGLISH)).thenReturn(patternString);
 
-    assertThat(localizationHelper.extract(stringContainsValue, messageCode)).isEqualTo(value);
+    assertThat(localizationHelper.extract(stringContainsValue, messageCode)).isEqualTo(Optional.of(value));
 
-    assertThat(localizationHelper.extract(stringWithoutValue, messageCode)).isNull();
+    assertThat(localizationHelper.extract(stringWithoutValue, messageCode)).isNotPresent();
   }
 }

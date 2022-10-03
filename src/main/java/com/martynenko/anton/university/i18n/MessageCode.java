@@ -1,12 +1,18 @@
 package com.martynenko.anton.university.i18n;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 /**
  * Enumeration collecting codes of String resources in message.properties file .
  *
  * @author Martynenko Anton
  * @since 1.1
  */
-
+@AllArgsConstructor
+@Getter
+@ToString
 public enum MessageCode {
 
   // some of provided codes related to extraction patterns, some to simple String sentence
@@ -33,28 +39,5 @@ public enum MessageCode {
   /**
    * Code for string resource access .
    */
-  private String code;
-
-  /**
-   * Simple constructor .
-   * @param code string resource code
-   */
-
-  MessageCode(final String code) {
-    this.code = code;
-  }
-
-  /**
-   * Getter for property 'code'.
-   *
-   * @return Value for property 'code'.
-   */
-  public String getCode() {
-    return code;
-  }
-
-  @Override
-  public String toString() {
-    return code;
-  }
+  private final String code;
 }
